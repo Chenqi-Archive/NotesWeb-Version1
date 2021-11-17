@@ -1,0 +1,189 @@
+body {
+	width: fit-content;
+	height: fit-content;
+	left: 0px;
+	top: 0px;
+	font-family: Calibri, DengXian;
+	font-size: 18px;
+	line-height: 1.6;
+}
+
+img {
+	height: 200px;
+	display: block;
+	margin: auto;
+}
+
+a {
+	display: block;
+	text-decoration: none;
+	color: royalblue;
+}
+
+a:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+
+
+/** root frame **/
+
+.root-frame {
+	min-width: 200px;
+	min-height: 200px;
+	max-width: 90%;
+	max-height: 90%;
+	position: absolute;
+}
+
+.root-frame-border-right {
+	width: 11px;
+	height: 100%;
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	cursor: e-resize;
+}
+
+.root-frame-border-bottom {
+	width: 100%;
+	height: 11px;
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	cursor: s-resize;
+}
+
+.root-frame-border-rightbottom {
+	width: 11px;
+	height: 11px;
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	cursor: se-resize;
+}
+
+
+/* root frame view */
+
+.root-frame-view {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 10px;
+	bottom: 10px;
+	border: 1px solid darkgrey;
+	background-color: gainsboro;
+}
+
+.root-frame-title-bar {
+	height: 20px;
+	background-color: darkgrey;
+}
+
+.root-frame-close-button {
+	width: 12px;
+	height: 12px;
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	border-radius: 6px;
+	background-color: lightcoral;
+}
+
+.root-frame-close-button:hover {
+	background-color: coral;
+}
+
+.root-frame-close-button:active {
+	background-color: tomato;
+}
+
+
+/* root frame content */
+
+.root-frame-list {
+	width: 500px;
+	height: 600px;
+}
+
+.root-frame-plane {
+	width: 700px;
+	height: 600px;
+}
+
+.scroll-frame-list {
+	position: absolute;
+	left: 0px;
+	top: 20px;
+	right: 0px;
+	bottom: 0px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.scroll-frame-plane {
+	overflow-x: scroll;
+	overflow-y: scroll;
+}
+
+
+
+/** list **/
+
+.list-frame {
+	padding: 5px 2em;
+	border-left: 10px solid transparent;
+}
+
+.list-header {
+	margin-left: -2em;
+}
+
+
+/* list entry */
+
+.block-text {
+	margin-bottom: 0.3em;
+}
+
+.image-frame {
+	
+}
+
+.image-view {
+	
+}
+
+.image-caption {
+	text-align: center;
+	font-size: 16px;
+}
+
+
+
+/** plane **/
+
+.plane-frame {
+	
+}
+
+.plane-text {
+	position: absolute;
+	left:0; right:0; top:0; bottom:0;
+	margin: auto;
+	font-size: larger;
+	user-select: none;
+}
+
+
+/* plane frame */
+
+.plane-frame-list {
+	
+}
+
+.plane-frame-plane {
+	
+}
