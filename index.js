@@ -2,7 +2,7 @@
 
 // file
 function load(path) {
-	return new Promise((resolve, reject) => {
+	return new Promise(resolve => {
 		let request = new XMLHttpRequest();
 		request.onload = () => { resolve(request.responseText); };
 		request.open('GET', path); request.send();
@@ -29,7 +29,7 @@ async function load_block(block_id) {
 /// render
 
 // element
-function create(element_type, class_name, child_list = [], callback = function (obj) { }) {
+function create(element_type, class_name, child_list = [], callback = obj => {}) {
 	let obj = document.createElement(element_type); obj.className = class_name;
 	for (let child of child_list) { obj.appendChild(child); }
 	callback(obj);
@@ -41,28 +41,28 @@ async function create_list_entry_obj(block_id) {
 	let block = await load_block(block_id);
 	switch (block.type) {
 		case 'text':
-			return create('div', 'block-text', [], function (obj) { obj.innerText = block.text; });
+			return create('div', 'block-text', [], obj => obj.innerText = block.text);
 		case 'image':
 			return create('div', 'image-frame', [
-				create('img', 'image-view', [], function (obj) { obj.src = block.data; }),
-				create('div', 'image-caption', [], function (obj) { obj.innerText = block.text; })
+				create('img', '', [], obj => obj.src = block.data),
+				create('div', 'image-caption', [], obj => obj.innerText = block.text)
 			]);
 		case 'list':
 			return await create_list_obj(block_id);
 		case 'list-ref':
 		case 'plane':
-			return create('a', 'block-text', [], function (obj) {
+			return create('a', 'block-text', [], obj => {
 				obj.innerText = block.text;
-				obj.onclick = function () { load_root_frame(block_id); }
+				obj.onclick = () => load_root_frame(block_id);
 			});
 	}
 }
 
 async function create_list_obj(block_id) {
 	let block = await load_block(block_id);
-	return create('div', 'list-frame', [
-		create('div', 'list-header', [], function (obj) { obj.innerText = block.text; }),
-	], async function (obj) {
+	return create('div', 'list-view', [
+		create('div', 'list-header', [], obj => obj.innerText = block.text),
+	], async obj => {
 		for (let child_block_id of block.list) {
 			obj.appendChild(await create_list_entry_obj(child_block_id));
 		}
@@ -89,9 +89,9 @@ async function create_plane_entry_obj(block_info) {
 
 async function create_plane_obj(block_id) {
 	let block = await load_block(block_id);
-	return create('div', 'plane-frame', [
-		create('div', 'plane-text', [], function (obj) { obj.innerText = block.text; })
-	], async function (obj) {
+	return create('div', '', [
+		create('div', 'plane-text', [], obj => obj.innerText = block.text)
+	], async obj => {
 		for (let child_block_info of block.list) {
 			obj.appendChild(await create_plane_entry_obj(child_block_info));
 		}
@@ -101,9 +101,9 @@ async function create_plane_obj(block_id) {
 
 // root frame
 root_frame_map = new Map();
-
+max_z_index = 1;
 function show_root_frame(obj) {
-	document.body.appendChild(obj);
+	obj.style.zIndex = max_z_index++;
 }
 
 function destroy_root_frame(obj) {
@@ -149,51 +149,38 @@ function set_resizable(frame) {
 	};
 }
 
-function create_root_frame_title_bar(frame) {
-	return create('div', 'root-frame-title-bar', [], obj => set_draggable(obj, frame));
-}
-
-function create_root_frame_close_button(frame) {
-	return create('div', 'root-frame-close-button', [], obj => obj.onclick = () => destroy_root_frame(frame));
-}
-
 async function create_root_frame(block_id) {
+	let frame = create('div', 'root-frame'); frame.block_id = block_id;
+	let frame_view = create('div', 'root-frame-view', [
+		create('div', 'root-frame-title-bar', [], obj => set_draggable(obj, frame)),
+		block_id == root_block_id ?
+			create('div', '') :
+			create('div', 'root-frame-close-button', [], obj => obj.onclick = () => destroy_root_frame(frame))
+	]);
+	frame.appendChild(frame_view);
+	frame.onmousedown = () => show_root_frame(frame); set_resizable(frame);
 	let block = await load_block(block_id);
 	switch (block.type) {
 		case 'list':
 		case 'list-ref':
-			return document.body.appendChild(
-				create('div', 'root-frame root-frame-list', [], async frame => {
-					frame.appendChild(create('div', 'root-frame-view', [
-						create_root_frame_title_bar(frame),
-						create_root_frame_close_button(frame),
-						create('div', 'scroll-frame-list', [await create_list_obj(block_id)])
-					]));
-					set_resizable(frame);
-					frame.onmousedown = () => show_root_frame(frame);
-				})
-			);
+			frame.classList.add('root-frame-list');
+			frame_view.appendChild(create('div', 'scroll-frame scroll-frame-list', [await create_list_obj(block_id)]));
+			break;
 		case 'plane':
-			return document.body.appendChild(
-				create('div', 'root-frame root-frame-plane', [], async frame => {
-					frame.appendChild(create('div', 'root-frame-view', [
-						create_root_frame_title_bar(frame),
-						create_root_frame_close_button(frame),
-						create('div', 'scroll-frame-plane', [await create_plane_obj(block_id)])
-					]));
-					set_resizable(frame);
-				})
-			);
+			frame.classList.add('root-frame-plane');
+			frame_view.appendChild(create('div', 'scroll-frame scroll-frame-plane', [await create_plane_obj(block_id)]));
+			break;
 	}
+	return document.body.appendChild(frame);
 }
 
 async function load_root_frame(block_id) {
-	if (root_frame_map.has(block_id)) {
-		show_root_frame(root_frame_map.get(block_id));
-	} else {
+	if (!root_frame_map.has(block_id)) {
 		root_frame_map.set(block_id, await create_root_frame(block_id));
 	}
+	show_root_frame(root_frame_map.get(block_id));
 }
 
 // root block
-window.onload = async () => load_root_frame(JSON.parse(await load('index.json')));
+root_block_id = 0;
+window.onload = async () => load_root_frame(root_block_id = JSON.parse(await load('index.json')));

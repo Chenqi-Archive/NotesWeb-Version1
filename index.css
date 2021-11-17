@@ -1,15 +1,11 @@
 body {
-	width: fit-content;
-	height: fit-content;
-	left: 0px;
-	top: 0px;
 	font-family: Calibri, DengXian;
 	font-size: 18px;
 	line-height: 1.6;
 }
 
 img {
-	height: 200px;
+	max-height: 200px;
 	display: block;
 	margin: auto;
 }
@@ -30,11 +26,19 @@ a:hover {
 /** root frame **/
 
 .root-frame {
-	min-width: 200px;
-	min-height: 200px;
-	max-width: 90%;
-	max-height: 90%;
+	min-width: 300px;
+	min-height: 300px;
 	position: absolute;
+}
+
+.root-frame-list {
+	width: 500px;
+	height: 400px;
+}
+
+.root-frame-plane {
+	width: 700px;
+	height: 400px;
 }
 
 .root-frame-border-right {
@@ -101,38 +105,31 @@ a:hover {
 }
 
 
-/* root frame content */
+/* scroll frame */
 
-.root-frame-list {
-	width: 500px;
-	height: 600px;
-}
-
-.root-frame-plane {
-	width: 700px;
-	height: 600px;
-}
-
-.scroll-frame-list {
+.scroll-frame {
 	position: absolute;
 	left: 0px;
 	top: 20px;
 	right: 0px;
 	bottom: 0px;
+}
+
+.scroll-frame-list {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
 
 .scroll-frame-plane {
-	overflow-x: scroll;
-	overflow-y: scroll;
+	overflow-x: auto;
+	overflow-y: auto;
 }
 
 
 
 /** list **/
 
-.list-frame {
+.list-view {
 	padding: 5px 2em;
 	border-left: 10px solid transparent;
 }
@@ -149,11 +146,7 @@ a:hover {
 }
 
 .image-frame {
-	
-}
-
-.image-view {
-	
+	margin: 5px 0px;
 }
 
 .image-caption {
@@ -165,25 +158,15 @@ a:hover {
 
 /** plane **/
 
-.plane-frame {
-	
-}
-
 .plane-text {
 	position: absolute;
-	left:0; right:0; top:0; bottom:0;
-	margin: auto;
-	font-size: larger;
-	user-select: none;
+	left: 10px;
+	top: 10px;
+	font-size: 30px;
+	opacity: 0.5;
 }
 
-
-/* plane frame */
-
-.plane-frame-list {
-	
-}
-
-.plane-frame-plane {
-	
+.plane-frame {
+	position: absolute;
+	border: 1px solid darkgrey;
 }
