@@ -1,10 +1,10 @@
 /// block
 
 // file
+var request = new XMLHttpRequest();
 function load(path) {
 	return new Promise(resolve => {
-		let request = new XMLHttpRequest();
-		request.onload = () => { resolve(request.responseText); };
+		request.onload = () => resolve(request.responseText);
 		request.open('GET', path); request.send();
 	});
 }
@@ -15,7 +15,7 @@ function build_block_path(block_id) {
 }
 
 // block cache
-block_cache = new Map();
+var block_cache = new Map();
 async function load_block(block_id) {
 	if (!block_cache.has(block_id)) {
 		let reponse = await load(build_block_path(block_id));
@@ -100,8 +100,8 @@ async function create_plane_obj(block_id) {
 
 
 // root frame
-root_frame_map = new Map();
-max_z_index = 1;
+var root_frame_map = new Map();
+var max_z_index = 1;
 function show_root_frame(obj) {
 	obj.style.zIndex = max_z_index++;
 }
@@ -182,5 +182,5 @@ async function load_root_frame(block_id) {
 }
 
 // root block
-root_block_id = 0;
+var root_block_id = 0;
 window.onload = async () => load_root_frame(root_block_id = JSON.parse(await load('index.json')));
